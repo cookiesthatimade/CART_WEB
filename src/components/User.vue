@@ -1,7 +1,7 @@
 <template>
   <div class="user-container">
     <div class="user-list">
-      <h2>결제 리스트</h2>
+      <h2>결제자 리스트</h2>
       <ul v-if="people.length > 0">
         <li v-for="(person, index) in people" :key="index">
           <div class="person-info">
