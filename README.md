@@ -16,7 +16,7 @@
 
 ![Untitled](public/images/cart.png)
 
-## User List
+## Payer List
 
 ![Untitled](public/images/list.png)
 
