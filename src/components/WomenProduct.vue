@@ -1,25 +1,25 @@
 <template>
   <div>
     <ul class="product_list">
-      <li v-for="product in products" :key="product.uid" class="product_item">
-        <img :src="product.src" class="item_image" />
-        <span class="item_name">{{ product.dish }}</span>
-        <span class="item_price">{{ product.price + " $" }}</span>
+      <li v-for="product in products2" :key="product.id" class="product_item">
+        <img :src="product.src" class="item_image" @click="openModal(product)" />
+        <span class="item_name">{{ product.name }}</span>
+        <span class="item_price">{{ product.price + "원"}}</span>
 
         <div class="product_actions">
           <button
             v-if="product.quantity === 0"
             type="button"
             class="button item_button add_button"
-            @click="addToCart(product)"
+            @click="addToCart2(product)"
           >
-            Add
+            장바구니 담기
           </button>
           <div v-else>
             <button
               type="button"
               class="button item_button cart_button"
-              @click="addToCart(product)"
+              @click="addToCart2(product)"
             >
               +
             </button>
@@ -29,7 +29,7 @@
             <button
               type="button"
               class="button item_button remove_button"
-              @click="removeFromCart(product)"
+              @click="removeFromCart2(product)"
             >
               &minus;
             </button>
@@ -39,7 +39,7 @@
             v-if="product.liked === 'no'"
             type="button"
             class="button item_button like_button"
-            @click="addToLiked(product)"
+            @click="addToLiked2(product)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +60,7 @@
             v-if="product.liked === 'yes'"
             type="button"
             class="button item_button remove_like_button"
-            @click="removeFromLiked(product)"
+            @click="removeFromLiked2(product)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -80,26 +80,52 @@
         </div>
       </li>
     </ul>
+    <Modal :isOpen="isModalOpen" :selectedProduct="selectedProduct" @close="closeModal" />
+
   </div>
 </template>
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
 
+import Modal from '../components/Modal.vue'
+
+
 export default {
-  name: "products",
+  name: "Womenproducts",
+
+  components: {
+    Modal
+  },
+
+  data() {
+    return {
+      isModalOpen: false,
+      selectedProduct: null 
+    };
+  },
 
   computed: {
-    ...mapState(["products"]),
+    ...mapState(["products2"]),
   },
+  
   methods: {
     ...mapActions(["getProducts"]),
     ...mapMutations([
-      "addToLiked",
-      "removeFromLiked",
-      "addToCart",
-      "removeFromCart",
+      "addToLiked2",
+      "removeFromLiked2",
+      "addToCart2",
+      "removeFromCart2",
     ]),
+
+    openModal(product) {
+      this.isModalOpen = true;
+      this.selectedProduct = product;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+      this.selectedProduct = null; 
+    },
   },
   async created() {
     this.getProducts();
@@ -115,16 +141,21 @@ export default {
 }
 .product_item {
   display: flex;
-  width: 300px;
+  width: calc(25% - 20px);
   flex-direction: column;
-
   margin-bottom: 20px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   justify-content: space-between;
 }
 .item_image {
   margin-bottom: 10px;
+  transition: transform 0.3s; 
 }
+
+.item_image:hover {
+  transform: scale(1.1); 
+}
+
 .item_name {
   padding: 10px;
   font-weight: bold;

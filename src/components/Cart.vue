@@ -1,18 +1,18 @@
 <template>
   <div>
-    <h3>Cart</h3>
+    <h3>장바구니</h3>
     <div v-show="!products.length">
-      <p>Your cart is empty!</p>
-      <router-link to="/">Continue shopping</router-link>
+      <p>장바구니에 추가된 상품이 없습니다!</p>
+      <router-link to="/">쇼핑 계속하기</router-link>
     </div>
 
     <div v-show="products.length">
       <div class="cart_list">
-        <div v-for="p in products" :key="p.uid">
+        <div v-for="p in products" :key="p.id">
           <div class="cart_item">
-            <span>{{ p.dish }}</span>
-            <span>Quantity: {{ p.quantity }}</span>
-            <span> {{ p.price * p.quantity }} $ </span>
+            <span>{{ p.name }}</span>
+            <span>수량 : {{ p.quantity }}</span>
+            <span>{{ new Intl.NumberFormat("ko-KR").format(Number(p.price.replace(/,/g, "")) * p.quantity) }} 원</span>
             <div>
               <button
                 type="button"
@@ -32,38 +32,77 @@
           </div>
         </div>
       </div>
-      <span class="total"
-        >Total amount:
-        {{ new Intl.NumberFormat("ru-RU").format(total) }} $</span
-      >
+        <span class="total">총 가격 : {{ total }} 원</span>
     </div>
 
-    <button v-show="products.length" @click="checkout" class="checkout">
-      Checkout
+    <button v-show="products.length" @click="showModal" class="checkout">
+      결제하기
     </button>
+
+    <div v-if="isModalVisible" class="modal">
+      <div class="modal-content">
+        <span class="close" @click="closeModal">&times;</span>
+        <p class="modal-text">결제할 사용자의 이름을 입력하세요:</p>
+        <input type="text" v-model="inputName" @keyup.enter="confirmCheckout" class="modal-input" />
+        <button @click="confirmCheckout" class="modal-button">확인</button>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapState, mapMutations } from "vuex";
+
 
 export default {
+  
+
+  name: "Cart",
+
+  data() {
+    return {
+      isModalVisible: false,
+      inputName: '',
+    };
+  },
+
+
   computed: {
     ...mapGetters({
       products: "cartProducts",
       total: "total",
     }),
-  },
-  methods: {
-    ...mapMutations(["addToCart", "removeFromCart"]),
-    checkout() {
-      const string = this.products
-        .map((item) => {
-          return item.dish + " " + item.quantity + " шт.";
-        })
-        .join("\n");
+    ...mapState(['people','selectedPerson']),
 
-      alert(string + "\nОбщая стоимость " + this.total + " руб.");
+  },
+
+
+  methods: {
+    ...mapMutations(["addToCart", "removeFromCart", "SelectedPerson", "clearCart", "addUserToUserlist"]),
+
+    showModal() {
+      this.isModalVisible = true;
+    },
+
+    closeModal() {
+      this.isModalVisible = false;
+      this.inputName = '';
+    },
+
+    confirmCheckout() {
+      if (!this.inputName) {
+        alert("사용자 이름을 입력하세요.");
+        return;
+      }
+
+      this.$store.commit("SelectedPerson", { name: this.inputName });
+
+      if (confirm(`${this.inputName}님이 결제하실 금액은 총 ${this.total} 원 입니다.\nPOS기기에서 결제해주세요.`)) {
+        this.$store.commit("addUserToUserlist", { name: this.inputName, total: this.total });
+        this.$store.commit("clearCart");
+        this.closeModal();
+      }
     },
   },
 };
@@ -115,4 +154,74 @@ export default {
 .total {
   font-weight: bold;
 }
+
+/* 모달 스타일 */
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 400px;
+  text-align: center; 
+}
+
+.modal-input {
+  display: block;
+  width: 80%;
+  margin: 10px auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-button {
+  display: block;
+  width: 25%;
+  margin: 10px auto;
+  padding: 10px;
+  background-color: #797979;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-button:hover {
+  background-color: #3c3c3c;
+}
+
+.modal-text {
+  text-align: center; 
+  margin-top: 10px; 
+  font-size: 16px;
+  color: #333; 
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 </style>

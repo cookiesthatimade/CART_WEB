@@ -1,18 +1,18 @@
 <template>
   <div>
-    <h3 class="title">Favorite products</h3>
+    <h3 class="title">관심상품 목록</h3>
 
     <div v-show="!products.length">
-      <p>You don't have any favorite products yet!</p>
-      <router-link to="/">Go to catalog</router-link>
+      <p>관심있는 상품이 아직 없습니다!</p>
+      <router-link to="/">쇼핑 계속하기</router-link>
     </div>
 
     <div v-show="products.length">
       <ul class="product_list">
         <li v-for="product in products" :key="product.uid" class="product_item">
           <img :src="product.src" class="item_image" />
-          <span class="item_name">{{ product.dish }}</span>
-          <span class="item_price">{{ product.price + " руб." }}</span>
+          <span class="item_name">{{ product.name }}</span>
+          <span class="item_price">{{ product.price + "원" }}</span>
 
           <div class="product_actions">
             <button
@@ -21,7 +21,7 @@
               class="button item_button add_button"
               @click="addToCart(product)"
             >
-              Add
+              장바구니 담기
             </button>
             <div v-else>
               <button

@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="container">
-    <nav-bar></nav-bar>
+    <nav-bar v-if="showNavBar"></nav-bar>
     <keep-alive> <router-view></router-view></keep-alive>
   </div>
 </template>
@@ -13,6 +13,12 @@ export default {
   components: {
     NavBar,
   },
+
+  computed: {
+    showNavBar() {
+      return this.$route.path !== '/user';
+    }
+  }
 }
 </script>
 
@@ -28,8 +34,9 @@ html,
 body,
 #app {
   height: 100%;
-  width: 1200px;
-  margin: 20px auto;
+  width: 100%;
+  margin: 20px 20px 0 auto;
+  
 }
 
 * {

@@ -1,17 +1,19 @@
 <template>
   <nav class="menu">
     <div>
-      <router-link class="router-link" to="/">Menu</router-link>
+      <router-link class="router-link" to="/">Men</router-link>
     </div>
     <div>
-      <router-link class="router-link" to="/liked"
-        >Favorites ({{ itemsInLiked }})</router-link
-      >
+      <router-link class="router-link" to="/women">Women</router-link>
     </div>
     <div>
-      <router-link class="router-link" to="/cart"
-        >Cart ({{ itemsInCart }})</router-link
-      >
+      <router-link class="router-link" to="/liked">Favorites ({{ itemsInLiked }})</router-link>
+    </div>
+    <div>
+      <router-link class="router-link" to="/cart">Cart ({{ itemsInCart }})</router-link>
+    </div>
+    <div>
+      <router-link class="router-link" to="/user">-</router-link>
     </div>
   </nav>
 </template>
@@ -20,7 +22,18 @@
 import { mapGetters } from "vuex";
 
 export default {
-  name: "navBar",
+  name: "Navbar",
+
+  data() {
+    return {
+      showSubMenu: false
+    };
+  },
+  methods: {
+    toggleSubMenu() {
+      this.showSubMenu = !this.showSubMenu;
+    }
+  },
   computed: {
     ...mapGetters(["itemsInCart", "itemsInLiked"]),
   },
@@ -32,6 +45,12 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
+
+.submenu {
+  display: flex;
+  justify-content: center;
+}
+
 .menu > div {
   margin-right: 20px;
   margin-bottom: 20px;
