@@ -4,15 +4,22 @@
 
 ## Catalog
 
-![Untitled](src/assets/images/readme/catalog.png)
+![Untitled](public/images/catalog1.png)
+![Untitled](public/images/catalog2.png)
+
 
 ## Favorites
 
-![Untitled](src/assets/images/readme/liked.png)
+![Untitled](public/images/liked.png)
 
 ## Cart
 
-![Untitled](src/assets/images/readme/cart.png)
+![Untitled](public/images/cart.png)
+
+## User List
+
+![Untitled](public/images/list.png)
+
 
 ## Project setup
 
