@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>장바구니</h3>
+    <h3 class="title">장바구니</h3>
     <div v-show="!products.length">
       <p>장바구니에 추가된 상품이 없습니다!</p>
       <router-link to="/">쇼핑 계속하기</router-link>
@@ -12,7 +12,14 @@
           <div class="cart_item">
             <span>{{ p.name }}</span>
             <span>수량 : {{ p.quantity }}</span>
-            <span>{{ new Intl.NumberFormat("ko-KR").format(Number(p.price.replace(/,/g, "")) * p.quantity) }} 원</span>
+            <span
+              >{{
+                new Intl.NumberFormat("ko-KR").format(
+                  Number(p.price.replace(/,/g, "")) * p.quantity
+                )
+              }}
+              원</span
+            >
             <div>
               <button
                 type="button"
@@ -32,7 +39,7 @@
           </div>
         </div>
       </div>
-        <span class="total">총 가격 : {{ total }} 원</span>
+      <span class="total">총 가격 : {{ total }} 원</span>
     </div>
 
     <button v-show="products.length" @click="showModal" class="checkout">
@@ -43,43 +50,47 @@
       <div class="modal-content">
         <span class="close" @click="closeModal">&times;</span>
         <p class="modal-text">결제할 사용자의 이름을 입력하세요:</p>
-        <input type="text" v-model="inputName" @keyup.enter="confirmCheckout" class="modal-input" />
+        <input
+          type="text"
+          v-model="inputName"
+          @keyup.enter="confirmCheckout"
+          class="modal-input"
+        />
         <button @click="confirmCheckout" class="modal-button">확인</button>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapMutations } from "vuex";
 
-
 export default {
-  
-
   name: "Cart",
 
   data() {
     return {
       isModalVisible: false,
-      inputName: '',
+      inputName: "",
     };
   },
-
 
   computed: {
     ...mapGetters({
       products: "cartProducts",
       total: "total",
     }),
-    ...mapState(['people','selectedPerson']),
-
+    ...mapState(["people", "selectedPerson"]),
   },
 
-
   methods: {
-    ...mapMutations(["addToCart", "removeFromCart", "SelectedPerson", "clearCart", "addUserToUserlist"]),
+    ...mapMutations([
+      "addToCart",
+      "removeFromCart",
+      "SelectedPerson",
+      "clearCart",
+      "addUserToUserlist",
+    ]),
 
     showModal() {
       this.isModalVisible = true;
@@ -87,7 +98,7 @@ export default {
 
     closeModal() {
       this.isModalVisible = false;
-      this.inputName = '';
+      this.inputName = "";
     },
 
     confirmCheckout() {
@@ -98,8 +109,15 @@ export default {
 
       this.$store.commit("SelectedPerson", { name: this.inputName });
 
-      if (confirm(`${this.inputName}님이 결제하실 금액은 총 ${this.total} 원 입니다.\nPOS기기에서 결제해주세요.`)) {
-        this.$store.commit("addUserToUserlist", { name: this.inputName, total: this.total });
+      if (
+        confirm(
+          `${this.inputName}님이 결제하실 금액은 총 ${this.total} 원 입니다.\nPOS기기에서 결제해주세요.`
+        )
+      ) {
+        this.$store.commit("addUserToUserlist", {
+          name: this.inputName,
+          total: this.total,
+        });
         this.$store.commit("clearCart");
         this.closeModal();
       }
@@ -109,6 +127,11 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  margin-bottom: 20px;
+  font-size: 30px;
+}
+
 .cart_list {
   margin-bottom: 20px;
 }
@@ -175,13 +198,13 @@ export default {
   border: 1px solid #888;
   width: 80%;
   max-width: 400px;
-  text-align: center; 
+  text-align: center;
 }
 
 .modal-input {
   display: block;
   width: 80%;
-  margin: 10px auto; 
+  margin: 10px auto;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -204,10 +227,10 @@ export default {
 }
 
 .modal-text {
-  text-align: center; 
-  margin-top: 10px; 
+  text-align: center;
+  margin-top: 10px;
   font-size: 16px;
-  color: #333; 
+  color: #333;
 }
 
 .close {
@@ -223,5 +246,4 @@ export default {
   text-decoration: none;
   cursor: pointer;
 }
-
 </style>

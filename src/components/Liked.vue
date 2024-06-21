@@ -89,7 +89,6 @@ export default {
 <style scoped>
 .title {
   margin-bottom: 20px;
-  margin-left: 40px;
   font-size: 30px;
 }
 .product_list {
