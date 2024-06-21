@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="title">관심상품 목록</h3>
+    <h3 class="title">관심상품</h3>
 
     <div v-show="!products.length">
       <p>관심있는 상품이 아직 없습니다!</p>
